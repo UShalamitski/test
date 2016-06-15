@@ -1,0 +1,28 @@
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "application"
+
+mainClassName = "com.app.App"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.springframework:spring-context:${springVersion}"
+    compile "org.springframework:spring-context-support:${springVersion}"
+    compile "org.springframework:spring-tx:${springVersion}"
+    compile "org.springframework:spring-jdbc:${springVersion}"
+    compile "org.springframework:spring-test:${springVersion}"
+    compile "org.aspectj:aspectjweaver:${aspectjVersion}"
+    compile "org.apache.commons:commons-lang3:${apacheCommonLangVersion}"
+    compile "org.apache.commons:commons-collections4:${apacheCommonCollectionsVersion}"
+    compile "org.postgresql:postgresql:${jdbcPostgresqlVersion}"
+    compile "org.mybatis:mybatis:${myBatisVersion}"
+    compile "org.mybatis:mybatis-spring:${myBatisSpringVersion}"
+    compile "org.slf4j:slf4j-api:${slf4jVersion}"
+    compile "org.slf4j:slf4j-simple:${slf4jVersion}"
+
+    testCompile "org.easymock:easymock:${easymockVersion}"
+    testCompile "junit:junit:${junitVersion}"
+}

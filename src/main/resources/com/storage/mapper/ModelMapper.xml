@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.storage.mapper.ModelMapper">
+
+    <resultMap id="modelResultMap" type="Model">
+        <id column="model_id" property="id"/>
+        <result column="model_name" property="name"/>
+        <result column="model_date_start" property="startDate"/>
+        <result column="model_date_end" property="endDate"/>
+    </resultMap>
+
+    <sql id="modelColumns">
+        ${alias}.id AS model_id,
+        ${alias}.name AS model_name,
+        ${alias}.date_start AS model_date_start,
+        ${alias}.date_end AS model_date_end
+    </sql>
+
+    <insert id="store">
+        <selectKey order="BEFORE" keyProperty="id" resultType="long" statementType="PREPARED">
+            SELECT nextval('model_id_seq')
+        </selectKey>
+        INSERT INTO model (id, name, date_start, date_end) VALUES (#{id}, #{name}, #{startDate}, #{endDate})
+    </insert>
+
+    <select id="find" resultMap="modelResultMap">
+        SELECT
+        <include refid="modelColumns">
+            <property name="alias" value="m"/>
+        </include>
+        FROM model m
+        WHERE m.id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE model
+        SET name = #{name},
+            date_start = #{startDate},
+            date_end = #{endDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM model WHERE id = #{id}
+    </delete>
+</mapper>

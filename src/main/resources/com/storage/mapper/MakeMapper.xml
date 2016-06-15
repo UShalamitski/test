@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.storage.mapper.MakeMapper" >
+
+    <resultMap id="makeResultMap" type="Make">
+        <id column="make_id" property="id"/>
+        <result column="make_name" property="name"/>
+        <collection property="models" ofType="Model" javaType="java.util.ArrayList" resultMap="com.storage.mapper.ModelMapper.modelResultMap" />
+    </resultMap>
+
+    <sql id="makeColumns">
+        ${alias}.id AS make_id,
+        ${alias}.name AS make_name
+    </sql>
+
+    <insert id="store">
+        <selectKey order="BEFORE" keyProperty="id" resultType="long" statementType="PREPARED">
+            SELECT nextval('make_id_seq')
+        </selectKey>
+        INSERT INTO make (id, name) VALUES (#{id}, #{name})
+    </insert>
+
+    <select id="find" resultMap="makeResultMap">
+        SELECT
+            <include refid="makeColumns">
+                <property name="alias" value="m"/>
+            </include>,
+            <include refid="com.storage.mapper.ModelMapper.modelColumns">
+                <property name="alias" value="mod"/>
+            </include>
+        FROM make m
+        LEFT JOIN make_model mm ON mm.id_make = m.id
+        LEFT JOIN model mod ON mod.id = mm.id_model
+        WHERE m.id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE make
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM make WHERE id = #{id}
+    </delete>
+
+    <update id="linkMakeAndModel">
+        INSERT INTO make_model (id_make, id_model) VALUES(#{makeId}, #{modelId})
+    </update>
+
+    <delete id="deleteLinksMakeAndModel">
+        DELETE FROM make_model WHERE id_make = #{makeId}
+    </delete>
+
+</mapper>
